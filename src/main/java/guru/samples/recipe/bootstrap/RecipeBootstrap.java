@@ -4,6 +4,7 @@ import guru.samples.recipe.domain.*;
 import guru.samples.recipe.repository.CategoryRepository;
 import guru.samples.recipe.repository.RecipeRepository;
 import guru.samples.recipe.repository.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -30,6 +32,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        log.info("Loading Recipes...");
         recipeRepository.saveAll(getRecipes());
     }
 
