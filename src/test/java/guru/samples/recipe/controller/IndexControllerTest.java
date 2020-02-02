@@ -1,13 +1,20 @@
 package guru.samples.recipe.controller;
 
+import guru.samples.recipe.domain.Recipe;
 import guru.samples.recipe.repository.CategoryRepository;
 import guru.samples.recipe.repository.UnitOfMeasureRepository;
 import guru.samples.recipe.service.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.ui.Model;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -30,6 +37,9 @@ class IndexControllerTest {
     @Mock
     private UnitOfMeasureRepository unitOfMeasureRepository;
 
+    @Captor
+    private ArgumentCaptor<Set<Recipe>> argumentCaptor;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -38,10 +48,14 @@ class IndexControllerTest {
 
     @Test
     public void shouldGetIndexPageView() {
+        Set<Recipe> recipes = Stream.of(new Recipe(), new Recipe(), new Recipe()).collect(Collectors.toSet());
+        when(recipeService.findAll()).thenReturn(recipes);
+
         String viewName = tested.index(model);
 
         verify(recipeService, times(1)).findAll();
-        verify(model, times(1)).addAttribute(eq("recipes"), anySet());
+        verify(model, times(1)).addAttribute(eq("recipes"), argumentCaptor.capture());
         assertThat("index", is(equalTo(viewName)));
+        assertThat(argumentCaptor.getValue().size(), is(equalTo(recipes.size())));
     }
 }
