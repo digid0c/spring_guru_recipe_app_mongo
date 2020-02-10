@@ -4,6 +4,7 @@ import guru.samples.recipe.converter.RecipeToRecipeViewConverter;
 import guru.samples.recipe.converter.RecipeViewToRecipeConverter;
 import guru.samples.recipe.domain.Recipe;
 import guru.samples.recipe.repository.RecipeRepository;
+import guru.samples.recipe.view.RecipeView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -56,6 +57,20 @@ public class RecipeServiceUnitTest {
         Recipe recipe = tested.findById(RECIPE_ID);
 
         assertThat(recipe, is(notNullValue()));
+        verify(recipeRepository).findById(RECIPE_ID);
+        verify(recipeRepository, never()).findAll();
+    }
+
+    @Test
+    public void shouldGetRecipeViewById() {
+        Recipe recipe = Recipe.builder().id(RECIPE_ID).build();
+        when(recipeRepository.findById(RECIPE_ID)).thenReturn(Optional.of(recipe));
+
+        RecipeView recipeView = RecipeView.builder().id(RECIPE_ID).build();
+        when(recipeToRecipeViewConverter.convert(recipe)).thenReturn(recipeView);
+
+        RecipeView foundRecipe = tested.findViewById(RECIPE_ID);
+        assertThat(foundRecipe, is(notNullValue()));
         verify(recipeRepository).findById(RECIPE_ID);
         verify(recipeRepository, never()).findAll();
     }

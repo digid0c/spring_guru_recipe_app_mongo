@@ -47,6 +47,12 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
+    public RecipeView findViewById(Long id) {
+        return recipeToRecipeViewConverter.convert(findById(id));
+    }
+
+    @Override
+    @Transactional
     public RecipeView save(RecipeView recipe) {
         Recipe detachedRecipe = recipeViewToRecipeConverter.convert(recipe);
         Recipe savedRecipe = ofNullable(detachedRecipe)

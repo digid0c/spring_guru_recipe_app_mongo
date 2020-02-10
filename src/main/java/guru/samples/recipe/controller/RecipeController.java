@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import static java.lang.String.format;
+
 @Controller
 @RequestMapping("/recipe")
 public class RecipeController {
@@ -18,7 +20,7 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
-    @RequestMapping("/details/{id}")
+    @GetMapping("/{id}/details")
     public String getRecipe(@PathVariable Long id, Model model) {
         model.addAttribute("recipe", recipeService.findById(id));
         return "recipe/details";
@@ -30,9 +32,15 @@ public class RecipeController {
         return "recipe/recipe-form";
     }
 
+    @GetMapping("/{id}/update")
+    public String updateRecipe(@PathVariable Long id, Model model) {
+        model.addAttribute("recipe", recipeService.findViewById(id));
+        return "recipe/recipe-form";
+    }
+
     @PostMapping("/save")
     public String saveOrUpdate(@ModelAttribute RecipeView recipe) {
         RecipeView savedRecipe = recipeService.save(recipe);
-        return "redirect:/recipe/details/" + savedRecipe.getId();
+        return format("redirect:/recipe/%d/details", savedRecipe.getId());
     }
 }
