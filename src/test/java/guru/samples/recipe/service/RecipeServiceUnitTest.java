@@ -1,5 +1,7 @@
 package guru.samples.recipe.service;
 
+import guru.samples.recipe.converter.RecipeToRecipeViewConverter;
+import guru.samples.recipe.converter.RecipeViewToRecipeConverter;
 import guru.samples.recipe.domain.Recipe;
 import guru.samples.recipe.repository.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,12 +25,18 @@ public class RecipeServiceUnitTest {
     private RecipeService tested;
 
     @Mock
+    private RecipeToRecipeViewConverter recipeToRecipeViewConverter;
+
+    @Mock
+    private RecipeViewToRecipeConverter recipeViewToRecipeConverter;
+
+    @Mock
     private RecipeRepository recipeRepository;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        tested = new RecipeServiceImpl(recipeRepository);
+        tested = new RecipeServiceImpl(recipeRepository, recipeToRecipeViewConverter, recipeViewToRecipeConverter);
     }
 
     @Test
