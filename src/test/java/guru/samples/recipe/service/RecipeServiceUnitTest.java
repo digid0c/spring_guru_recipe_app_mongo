@@ -74,4 +74,11 @@ public class RecipeServiceUnitTest {
         verify(recipeRepository).findById(RECIPE_ID);
         verify(recipeRepository, never()).findAll();
     }
+
+    @Test
+    public void shouldDeleteRecipeById() {
+        tested.deleteById(RECIPE_ID);
+
+        verify(recipeRepository).deleteById(RECIPE_ID);
+    }
 }

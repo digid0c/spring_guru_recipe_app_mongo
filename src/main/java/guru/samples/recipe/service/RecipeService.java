@@ -14,4 +14,6 @@ public interface RecipeService {
     RecipeView findViewById(Long id);
 
     RecipeView save(RecipeView recipe);
+
+    void deleteById(Long id);
 }

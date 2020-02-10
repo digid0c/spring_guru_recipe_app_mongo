@@ -60,4 +60,9 @@ public class RecipeServiceImpl implements RecipeService {
                 .orElse(null);
         return recipeToRecipeViewConverter.convert(savedRecipe);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        recipeRepository.deleteById(id);
+    }
 }
