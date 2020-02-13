@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 public class IngredientView {
 
     private Long id;
+    private Long recipeId;
     private String description;
     private BigDecimal amount;
     private UnitOfMeasureView unitOfMeasure;

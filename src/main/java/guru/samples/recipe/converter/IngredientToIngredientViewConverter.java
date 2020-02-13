@@ -1,6 +1,7 @@
 package guru.samples.recipe.converter;
 
 import guru.samples.recipe.domain.Ingredient;
+import guru.samples.recipe.domain.Recipe;
 import guru.samples.recipe.view.IngredientView;
 import lombok.Synchronized;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class IngredientToIngredientViewConverter implements Converter<Ingredient
         return ofNullable(ingredient)
                 .map(source -> IngredientView.builder()
                         .id(source.getId())
+                        .recipeId(ofNullable(source.getRecipe())
+                                .map(Recipe::getId)
+                                .orElse(null))
                         .amount(source.getAmount())
                         .description(source.getDescription())
                         .unitOfMeasure(unitOfMeasureToUnitOfMeasureViewConverter.convert(source.getUnitOfMeasure()))
