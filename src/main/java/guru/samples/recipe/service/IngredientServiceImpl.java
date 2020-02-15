@@ -4,6 +4,7 @@ import guru.samples.recipe.converter.IngredientToIngredientViewConverter;
 import guru.samples.recipe.converter.IngredientViewToIngredientConverter;
 import guru.samples.recipe.domain.Ingredient;
 import guru.samples.recipe.domain.Recipe;
+import guru.samples.recipe.repository.IngredientRepository;
 import guru.samples.recipe.repository.RecipeRepository;
 import guru.samples.recipe.repository.UnitOfMeasureRepository;
 import guru.samples.recipe.view.IngredientView;
@@ -18,16 +19,19 @@ public class IngredientServiceImpl implements IngredientService {
 
     private final RecipeRepository recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
+    private final IngredientRepository ingredientRepository;
 
     private final IngredientToIngredientViewConverter ingredientToIngredientViewConverter;
     private final IngredientViewToIngredientConverter ingredientViewToIngredientConverter;
 
     @Autowired
     public IngredientServiceImpl(RecipeRepository recipeRepository, UnitOfMeasureRepository unitOfMeasureRepository,
+                                 IngredientRepository ingredientRepository,
                                  IngredientToIngredientViewConverter ingredientToIngredientViewConverter,
                                  IngredientViewToIngredientConverter ingredientViewToIngredientConverter) {
         this.recipeRepository = recipeRepository;
         this.unitOfMeasureRepository = unitOfMeasureRepository;
+        this.ingredientRepository = ingredientRepository;
         this.ingredientToIngredientViewConverter = ingredientToIngredientViewConverter;
         this.ingredientViewToIngredientConverter = ingredientViewToIngredientConverter;
     }
@@ -56,8 +60,9 @@ public class IngredientServiceImpl implements IngredientService {
                 .orElse(null);
 
         if (ingredient == null) {
-            ofNullable(ingredientViewToIngredientConverter.convert(ingredientView))
-                    .ifPresent(recipe::addIngredient);
+            ingredient = ofNullable(ingredientViewToIngredientConverter.convert(ingredientView))
+                    .orElseThrow(() -> new RuntimeException("Recipe ingredient is not present!"));
+            recipe.addIngredient(ingredient);
         } else {
             ingredient.setDescription(ingredientView.getDescription());
             ingredient.setAmount(ingredientView.getAmount());
@@ -65,10 +70,6 @@ public class IngredientServiceImpl implements IngredientService {
                     .orElseThrow(() -> new RuntimeException("Unit of measure is not found!")));
         }
 
-        Recipe savedRecipe = recipeRepository.save(recipe);
-        return ingredientToIngredientViewConverter.convert(savedRecipe.getIngredients().stream()
-                .filter(savedIngredient -> savedIngredient.getId().equals(ingredientView.getId()))
-                .findFirst()
-                .orElse(null));
+        return ingredientToIngredientViewConverter.convert(ingredientRepository.save(ingredient));
     }
 }

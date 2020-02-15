@@ -4,6 +4,8 @@ import guru.samples.recipe.service.IngredientService;
 import guru.samples.recipe.service.RecipeService;
 import guru.samples.recipe.service.UnitOfMeasureService;
 import guru.samples.recipe.view.IngredientView;
+import guru.samples.recipe.view.RecipeView;
+import guru.samples.recipe.view.UnitOfMeasureView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,5 +53,18 @@ public class IngredientController {
     public String saveOrUpdate(@ModelAttribute IngredientView ingredient) {
         IngredientView savedIngredient = ingredientService.save(ingredient);
         return format("redirect:/recipe/%d/ingredient/%d/details", savedIngredient.getRecipeId(), savedIngredient.getId());
+    }
+
+    @GetMapping("/recipe/{recipeId}/ingredient/new")
+    public String createRecipeIngredient(@PathVariable Long recipeId, Model model) {
+        RecipeView recipe = recipeService.findViewById(recipeId);
+        IngredientView ingredient = IngredientView.builder()
+                .recipeId(recipe.getId())
+                .unitOfMeasure(new UnitOfMeasureView())
+                .build();
+
+        model.addAttribute("ingredient", ingredient);
+        model.addAttribute("unitsOfMeasure", unitOfMeasureService.findAll());
+        return "recipe/ingredient/ingredient-form";
     }
 }

@@ -6,6 +6,7 @@ import guru.samples.recipe.converter.UnitOfMeasureToUnitOfMeasureViewConverter;
 import guru.samples.recipe.converter.UnitOfMeasureViewToUnitOfMeasureConverter;
 import guru.samples.recipe.domain.Ingredient;
 import guru.samples.recipe.domain.Recipe;
+import guru.samples.recipe.repository.IngredientRepository;
 import guru.samples.recipe.repository.RecipeRepository;
 import guru.samples.recipe.repository.UnitOfMeasureRepository;
 import guru.samples.recipe.view.IngredientView;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,12 +38,15 @@ public class IngredientServiceUnitTest {
     @Mock
     private UnitOfMeasureRepository unitOfMeasureRepository;
 
+    @Mock
+    private IngredientRepository ingredientRepository;
+
     private IngredientService tested;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        tested = new IngredientServiceImpl(recipeRepository, unitOfMeasureRepository,
+        tested = new IngredientServiceImpl(recipeRepository, unitOfMeasureRepository, ingredientRepository,
                 new IngredientToIngredientViewConverter(new UnitOfMeasureToUnitOfMeasureViewConverter()),
                 new IngredientViewToIngredientConverter(new UnitOfMeasureViewToUnitOfMeasureConverter()));
     }
@@ -67,14 +72,14 @@ public class IngredientServiceUnitTest {
                 .build();
         Recipe recipe = createRecipe();
         when(recipeRepository.findById(RECIPE_ID)).thenReturn(Optional.of(recipe));
-        when(recipeRepository.save(any())).thenReturn(recipe);
+        when(ingredientRepository.save(any())).then(returnsFirstArg());
 
         IngredientView savedIngredient = tested.save(ingredient);
 
         assertThat(savedIngredient.getId(), is(equalTo(THIRD_INGREDIENT_ID)));
         assertThat(savedIngredient.getRecipeId(), is(equalTo(RECIPE_ID)));
         verify(recipeRepository).findById(RECIPE_ID);
-        verify(recipeRepository).save(any());
+        verify(ingredientRepository).save(any());
     }
 
     private Recipe createRecipe() {

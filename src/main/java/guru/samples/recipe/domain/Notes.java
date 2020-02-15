@@ -8,7 +8,8 @@ import javax.persistence.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"recipe"})
+@EqualsAndHashCode(exclude = "recipe")
+@ToString(exclude = "recipe")
 @Entity
 public class Notes {
 

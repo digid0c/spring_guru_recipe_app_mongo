@@ -11,6 +11,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = "recipes")
+@ToString(exclude = "recipes")
 @Entity
 public class Category {
 

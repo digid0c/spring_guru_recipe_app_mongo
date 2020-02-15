@@ -115,4 +115,22 @@ public class IngredientControllerMockMvcTest {
 
         verify(ingredientService).save(any());
     }
+
+    @Test
+    public void shouldGetNewRecipeIngredientForm() throws Exception {
+        RecipeView recipe = RecipeView.builder()
+                .id(RECIPE_ID)
+                .build();
+        when(recipeService.findViewById(RECIPE_ID)).thenReturn(recipe);
+        when(unitOfMeasureService.findAll()).thenReturn(new HashSet<>());
+
+        mockMvc.perform(get("/recipe/1/ingredient/new"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe/ingredient/ingredient-form"))
+                .andExpect(model().attributeExists("ingredient"))
+                .andExpect(model().attributeExists("unitsOfMeasure"));
+
+        verify(recipeService).findViewById(RECIPE_ID);
+        verify(unitOfMeasureService).findAll();
+    }
 }

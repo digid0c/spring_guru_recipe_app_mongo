@@ -1,9 +1,6 @@
 package guru.samples.recipe.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -11,7 +8,8 @@ import java.math.BigDecimal;
 @Data
 @Builder
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"recipe"})
+@EqualsAndHashCode(exclude = "recipe")
+@ToString(exclude = "recipe")
 @Entity
 public class Ingredient {
 
