@@ -82,6 +82,17 @@ public class IngredientServiceUnitTest {
         verify(ingredientRepository).save(any());
     }
 
+    @Test
+    public void shouldDeleteIngredient() {
+        Recipe recipe = createRecipe();
+        when(recipeRepository.findById(RECIPE_ID)).thenReturn(Optional.of(recipe));
+
+        tested.deleteById(SECOND_INGREDIENT_ID, RECIPE_ID);
+
+        verify(recipeRepository).findById(RECIPE_ID);
+        verify(ingredientRepository).deleteById(SECOND_INGREDIENT_ID);
+    }
+
     private Recipe createRecipe() {
         return Recipe.builder()
                 .id(RECIPE_ID)

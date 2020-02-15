@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static java.util.Optional.ofNullable;
 
 @Service
@@ -71,5 +73,13 @@ public class IngredientServiceImpl implements IngredientService {
         }
 
         return ingredientToIngredientViewConverter.convert(ingredientRepository.save(ingredient));
+    }
+
+    @Override
+    public void deleteById(Long ingredientId, Long recipeId) {
+        Optional.of(recipeRepository.findById(recipeId))
+                .orElseThrow(() -> new RuntimeException("Cannot delete ingredient, which does not belong to any recipe!"));
+
+        ingredientRepository.deleteById(ingredientId);
     }
 }
