@@ -42,6 +42,7 @@ public class RecipeToRecipeViewConverter implements Converter<Recipe, RecipeView
                         .servings(source.getServings())
                         .source(source.getSource())
                         .url(source.getUrl())
+                        .image(source.getImage())
                         .notes(notesToNotesViewConverter.convert(source.getNotes()))
                         .categories(source.getCategories().stream()
                                 .map(categoryToCategoryViewConverter::convert)

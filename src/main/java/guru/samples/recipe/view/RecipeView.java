@@ -24,6 +24,7 @@ public class RecipeView {
     private String url;
     private String directions;
     private Set<IngredientView> ingredients = new HashSet<>();
+    private Byte[] image;
     private Difficulty difficulty;
     private NotesView notes;
     private Set<CategoryView> categories = new HashSet<>();
