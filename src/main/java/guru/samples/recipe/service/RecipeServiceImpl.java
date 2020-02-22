@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 
 @Slf4j
@@ -43,7 +44,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe findById(Long id) {
         return recipeRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Requested recipe is not found!"));
+                .orElseThrow(() -> new NotFoundException(format("Requested recipe id=%d is not found!", id)));
     }
 
     @Override
