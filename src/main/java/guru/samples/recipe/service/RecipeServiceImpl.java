@@ -3,6 +3,7 @@ package guru.samples.recipe.service;
 import guru.samples.recipe.converter.RecipeToRecipeViewConverter;
 import guru.samples.recipe.converter.RecipeViewToRecipeConverter;
 import guru.samples.recipe.domain.Recipe;
+import guru.samples.recipe.exception.NotFoundException;
 import guru.samples.recipe.repository.RecipeRepository;
 import guru.samples.recipe.view.RecipeView;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe findById(Long id) {
         return recipeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Requested recipe is not found!"));
+                .orElseThrow(() -> new NotFoundException("Requested recipe is not found!"));
     }
 
     @Override

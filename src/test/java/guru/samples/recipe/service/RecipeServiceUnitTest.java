@@ -3,6 +3,7 @@ package guru.samples.recipe.service;
 import guru.samples.recipe.converter.RecipeToRecipeViewConverter;
 import guru.samples.recipe.converter.RecipeViewToRecipeConverter;
 import guru.samples.recipe.domain.Recipe;
+import guru.samples.recipe.exception.NotFoundException;
 import guru.samples.recipe.repository.RecipeRepository;
 import guru.samples.recipe.view.RecipeView;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,8 +16,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Optional.empty;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class RecipeServiceUnitTest {
@@ -80,5 +83,12 @@ public class RecipeServiceUnitTest {
         tested.deleteById(RECIPE_ID);
 
         verify(recipeRepository).deleteById(RECIPE_ID);
+    }
+
+    @Test
+    public void shouldNotFindRecipe() {
+        when(recipeRepository.findById(RECIPE_ID)).thenReturn(empty());
+
+        assertThrows(NotFoundException.class, () -> tested.findById(RECIPE_ID), "Requested recipe is not found!");
     }
 }

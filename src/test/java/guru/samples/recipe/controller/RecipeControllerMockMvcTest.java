@@ -1,6 +1,7 @@
 package guru.samples.recipe.controller;
 
 import guru.samples.recipe.domain.Recipe;
+import guru.samples.recipe.exception.NotFoundException;
 import guru.samples.recipe.service.RecipeService;
 import guru.samples.recipe.view.RecipeView;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -23,6 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 public class RecipeControllerMockMvcTest {
+
+    private static final Long RECIPE_ID = 1L;
 
     @Mock
     private RecipeService recipeService;
@@ -39,7 +41,7 @@ public class RecipeControllerMockMvcTest {
 
     @Test
     public void shouldGetRecipeById() throws Exception {
-        when(recipeService.findById(anyLong())).thenReturn(new Recipe());
+        when(recipeService.findById(RECIPE_ID)).thenReturn(new Recipe());
 
         mockMvc.perform(get("/recipe/1/details"))
                 .andExpect(status().isOk())
@@ -57,7 +59,7 @@ public class RecipeControllerMockMvcTest {
 
     @Test
     public void shouldPostNewRecipeForm() throws Exception {
-        RecipeView recipe = RecipeView.builder().id(1L).build();
+        RecipeView recipe = RecipeView.builder().id(RECIPE_ID).build();
         when(recipeService.save(any(RecipeView.class))).thenReturn(recipe);
 
         mockMvc.perform(post("/recipe/save")
@@ -70,8 +72,8 @@ public class RecipeControllerMockMvcTest {
 
     @Test
     public void shouldGetUpdateRecipeForm() throws Exception {
-        RecipeView recipe = RecipeView.builder().id(1L).build();
-        when(recipeService.findViewById(anyLong())).thenReturn(recipe);
+        RecipeView recipe = RecipeView.builder().id(RECIPE_ID).build();
+        when(recipeService.findViewById(RECIPE_ID)).thenReturn(recipe);
 
         mockMvc.perform(get("/recipe/1/update"))
                 .andExpect(status().isOk())
@@ -85,6 +87,14 @@ public class RecipeControllerMockMvcTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/index"));
 
-        verify(recipeService).deleteById(1L);
+        verify(recipeService).deleteById(RECIPE_ID);
+    }
+
+    @Test
+    public void shouldNotFindRecipe() throws Exception {
+        when(recipeService.findById(RECIPE_ID)).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipe/1/details"))
+                .andExpect(status().isNotFound());
     }
 }
