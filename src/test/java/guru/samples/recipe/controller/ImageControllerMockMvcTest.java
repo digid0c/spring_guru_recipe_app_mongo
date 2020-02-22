@@ -42,7 +42,9 @@ public class ImageControllerMockMvcTest {
 
     @BeforeEach
     public void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(tested).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(tested)
+                .setControllerAdvice(new ControllerExceptionHandler())
+                .build();
     }
 
     @Test
@@ -87,6 +89,13 @@ public class ImageControllerMockMvcTest {
         verify(recipeService).findViewById(RECIPE_ID);
         byte[] responseBytes = response.getContentAsByteArray();
         assertThat(responseBytes.length, is(equalTo(CONTENT.getBytes().length)));
+    }
+
+    @Test
+    public void shouldHandleNumberFormatException() throws Exception {
+        mockMvc.perform(get("/recipe/test/recipe-image"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("error-400"));
     }
 
     private Byte[] createImageBytes() {

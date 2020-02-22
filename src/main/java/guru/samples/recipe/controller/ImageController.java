@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static java.lang.Long.valueOf;
 import static java.lang.String.format;
 import static org.apache.tomcat.util.http.fileupload.IOUtils.copy;
 
@@ -45,8 +46,8 @@ public class ImageController {
     }
 
     @GetMapping("/recipe/{recipeId}/recipe-image")
-    public void render(@PathVariable Long recipeId, HttpServletResponse response) throws IOException {
-        RecipeView recipe = recipeService.findViewById(recipeId);
+    public void render(@PathVariable String recipeId, HttpServletResponse response) throws IOException {
+        RecipeView recipe = recipeService.findViewById(valueOf(recipeId));
 
         if (recipe.getImage() != null) {
             byte[] imageBytes = new byte[recipe.getImage().length];

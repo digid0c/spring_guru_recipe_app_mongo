@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import static java.lang.Long.valueOf;
 import static java.lang.String.format;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
@@ -63,16 +62,6 @@ public class RecipeController {
         log.error(exception.getMessage(), exception);
 
         ModelAndView modelAndView = new ModelAndView("error-404");
-        modelAndView.addObject("exception", exception);
-        return modelAndView;
-    }
-
-    @ExceptionHandler(NumberFormatException.class)
-    @ResponseStatus(BAD_REQUEST)
-    public ModelAndView handleNumberFormatException(Exception exception) {
-        log.error(exception.getMessage(), exception);
-
-        ModelAndView modelAndView = new ModelAndView("error-400");
         modelAndView.addObject("exception", exception);
         return modelAndView;
     }
