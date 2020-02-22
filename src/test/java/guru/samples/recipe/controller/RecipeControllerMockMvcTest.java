@@ -91,11 +91,18 @@ public class RecipeControllerMockMvcTest {
     }
 
     @Test
-    public void shouldNotFindRecipe() throws Exception {
+    public void shouldHandleNotFoundException() throws Exception {
         when(recipeService.findById(RECIPE_ID)).thenThrow(NotFoundException.class);
 
         mockMvc.perform(get("/recipe/1/details"))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("error-404"));
+    }
+
+    @Test
+    public void shouldHandleNumberFormatException() throws Exception {
+        mockMvc.perform(get("/recipe/test/details"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("error-400"));
     }
 }
