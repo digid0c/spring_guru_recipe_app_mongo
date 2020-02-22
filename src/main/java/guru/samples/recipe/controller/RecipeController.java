@@ -52,9 +52,8 @@ public class RecipeController {
     @PostMapping("/save")
     public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeView recipe, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(error -> {
-                log.debug(error.toString());
-            });
+            bindingResult.getAllErrors()
+                    .forEach(error -> log.debug(error.toString()));
 
             return RECIPE_FORM;
         }
