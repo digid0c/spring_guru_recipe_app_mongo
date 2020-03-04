@@ -61,7 +61,6 @@ public class IngredientServiceUnitTest {
         verify(recipeRepository).findById(RECIPE_ID);
         assertThat(ingredient, is(notNullValue()));
         assertThat(ingredient.getId(), is(equalTo(SECOND_INGREDIENT_ID)));
-        assertThat(ingredient.getRecipeId(), is(equalTo(RECIPE_ID)));
     }
 
     @Test
@@ -77,7 +76,6 @@ public class IngredientServiceUnitTest {
         IngredientView savedIngredient = tested.save(ingredient);
 
         assertThat(savedIngredient.getId(), is(equalTo(THIRD_INGREDIENT_ID)));
-        assertThat(savedIngredient.getRecipeId(), is(equalTo(RECIPE_ID)));
         verify(recipeRepository).findById(RECIPE_ID);
         verify(ingredientRepository).save(any());
     }

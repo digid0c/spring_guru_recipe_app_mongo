@@ -1,16 +1,18 @@
 package guru.samples.recipe.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = "recipe")
-@ToString(exclude = "recipe")
 public class Notes {
 
+    @Id
     private String id;
-    private Recipe recipe;
     private String recipeNotes;
 }
