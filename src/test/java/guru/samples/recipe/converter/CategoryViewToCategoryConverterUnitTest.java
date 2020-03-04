@@ -10,7 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class CategoryViewToCategoryConverterUnitTest {
 
-    private static final Long ID = 1L;
+    private static final String ID = "1";
     private static final String DESCRIPTION = "Some description";
 
     private CategoryViewToCategoryConverter tested;

@@ -9,11 +9,11 @@ public interface RecipeService {
 
     Set<Recipe> findAll();
 
-    Recipe findById(Long id);
+    Recipe findById(String id);
 
-    RecipeView findViewById(Long id);
+    RecipeView findViewById(String id);
 
     RecipeView save(RecipeView recipe);
 
-    void deleteById(Long id);
+    void deleteById(String id);
 }

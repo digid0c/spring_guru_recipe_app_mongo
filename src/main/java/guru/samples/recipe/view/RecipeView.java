@@ -20,7 +20,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class RecipeView {
 
-    private Long id;
+    private String id;
 
     @NotBlank
     @Size(min = 3, max = 255)

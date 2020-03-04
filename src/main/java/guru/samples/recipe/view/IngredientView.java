@@ -13,8 +13,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class IngredientView {
 
-    private Long id;
-    private Long recipeId;
+    private String id;
+    private String recipeId;
     private String description;
     private BigDecimal amount;
     private UnitOfMeasureView unitOfMeasure;

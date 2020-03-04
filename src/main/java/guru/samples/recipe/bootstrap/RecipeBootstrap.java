@@ -7,18 +7,19 @@ import guru.samples.recipe.repository.UnitOfMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
-@Profile("default")
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -36,8 +37,39 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        log.info("Loading Recipes...");
+        if (categoryRepository.count() == 0) {
+            log.debug("Loading categories...");
+            loadCategories();
+        }
+        if (unitOfMeasureRepository.count() == 0) {
+            log.debug("Loading units of measure...");
+            loadUnitsOfMeasure();
+        }
+
+        log.debug("Loading Recipes...");
         recipeRepository.saveAll(getRecipes());
+    }
+
+    private void loadCategories() {
+        categoryRepository.saveAll(Stream.of(
+                Category.builder().description("American").build(),
+                Category.builder().description("Italian").build(),
+                Category.builder().description("Mexican").build(),
+                Category.builder().description("Fast Food").build()
+        ).collect(toList()));
+    }
+
+    private void loadUnitsOfMeasure() {
+        unitOfMeasureRepository.saveAll(Stream.of(
+                UnitOfMeasure.builder().description("Teaspoon").build(),
+                UnitOfMeasure.builder().description("Tablespoon").build(),
+                UnitOfMeasure.builder().description("Cup").build(),
+                UnitOfMeasure.builder().description("Pinch").build(),
+                UnitOfMeasure.builder().description("Ounce").build(),
+                UnitOfMeasure.builder().description("Each").build(),
+                UnitOfMeasure.builder().description("Dash").build(),
+                UnitOfMeasure.builder().description("Pint").build()
+        ).collect(toList()));
     }
 
     private List<Recipe> getRecipes() {

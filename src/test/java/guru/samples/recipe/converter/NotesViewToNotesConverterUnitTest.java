@@ -10,7 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class NotesViewToNotesConverterUnitTest {
 
-    private static final Long ID = 1L;
+    private static final String ID = "1";
     private static final String RECIPE_NOTES = "Some recipe notes";
 
     private NotesViewToNotesConverter tested;

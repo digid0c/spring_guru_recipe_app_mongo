@@ -27,10 +27,10 @@ import static org.mockito.Mockito.when;
 
 public class IngredientServiceUnitTest {
 
-    private static final Long RECIPE_ID = 1L;
-    private static final Long FIRST_INGREDIENT_ID = 1L;
-    private static final Long SECOND_INGREDIENT_ID = 2L;
-    private static final Long THIRD_INGREDIENT_ID = 3L;
+    private static final String RECIPE_ID = "1";
+    private static final String FIRST_INGREDIENT_ID = "1";
+    private static final String SECOND_INGREDIENT_ID = "2";
+    private static final String THIRD_INGREDIENT_ID = "3";
 
     @Mock
     private RecipeRepository recipeRepository;

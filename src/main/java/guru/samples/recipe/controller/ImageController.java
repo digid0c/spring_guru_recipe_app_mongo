@@ -17,7 +17,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static java.lang.Long.valueOf;
 import static java.lang.String.format;
 import static org.apache.tomcat.util.http.fileupload.IOUtils.copy;
 
@@ -34,20 +33,20 @@ public class ImageController {
     }
 
     @GetMapping("/recipe/{recipeId}/image")
-    public String getUploadForm(@PathVariable Long recipeId, Model model) {
+    public String getUploadForm(@PathVariable String recipeId, Model model) {
         model.addAttribute("recipe", recipeService.findViewById(recipeId));
         return "recipe/image-upload-form";
     }
 
     @PostMapping("/recipe/{recipeId}/image")
-    public String upload(@PathVariable Long recipeId, @RequestParam(name = "image") MultipartFile image) {
+    public String upload(@PathVariable String recipeId, @RequestParam(name = "image") MultipartFile image) {
         imageService.save(recipeId, image);
-        return format("redirect:/recipe/%d/details", recipeId);
+        return format("redirect:/recipe/%s/details", recipeId);
     }
 
     @GetMapping("/recipe/{recipeId}/recipe-image")
     public void render(@PathVariable String recipeId, HttpServletResponse response) throws IOException {
-        RecipeView recipe = recipeService.findViewById(valueOf(recipeId));
+        RecipeView recipe = recipeService.findViewById(recipeId);
 
         if (recipe.getImage() != null) {
             byte[] imageBytes = new byte[recipe.getImage().length];

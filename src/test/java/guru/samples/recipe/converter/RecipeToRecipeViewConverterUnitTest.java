@@ -14,7 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RecipeToRecipeViewConverterUnitTest {
 
-    private static final Long RECIPE_ID = 1L;
+    private static final String RECIPE_ID = "1";
     private static final Integer COOKING_TIME = 60;
     private static final Integer PREPARATION_TIME = 30;
     private static final String DESCRIPTION = "Some description";
@@ -23,13 +23,13 @@ public class RecipeToRecipeViewConverterUnitTest {
     private static final Integer SERVINGS = 4;
     private static final String SOURCE = "Some source";
     private static final String URL = "Some URL";
-    private static final Long FIRST_CATEGORY_ID = 1L;
-    private static final Long SECOND_CATEGORY_ID = 2L;
+    private static final String FIRST_CATEGORY_ID = "1";
+    private static final String SECOND_CATEGORY_ID = "2";
     private static final Integer CATEGORIES_SIZE = 2;
-    private static final Long FIRST_INGREDIENT_ID = 1L;
-    private static final Long SECOND_INGREDIENT_ID = 2L;
+    private static final String FIRST_INGREDIENT_ID = "1";
+    private static final String SECOND_INGREDIENT_ID = "2";
     private static final Integer INGREDIENTS_SIZE = 2;
-    private static final Long NOTES_ID = 1L;
+    private static final String NOTES_ID = "1";
 
     private RecipeToRecipeViewConverter tested;
 

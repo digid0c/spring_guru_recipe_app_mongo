@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
-import static java.lang.Long.valueOf;
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -33,7 +32,7 @@ public class RecipeController {
 
     @GetMapping("/{id}/details")
     public String getRecipe(@PathVariable String id, Model model) {
-        model.addAttribute("recipe", recipeService.findById(valueOf(id)));
+        model.addAttribute("recipe", recipeService.findById(id));
         return "recipe/details";
     }
 
@@ -44,7 +43,7 @@ public class RecipeController {
     }
 
     @GetMapping("/{id}/update")
-    public String updateRecipe(@PathVariable Long id, Model model) {
+    public String updateRecipe(@PathVariable String id, Model model) {
         model.addAttribute("recipe", recipeService.findViewById(id));
         return RECIPE_FORM;
     }
@@ -59,11 +58,11 @@ public class RecipeController {
         }
 
         RecipeView savedRecipe = recipeService.save(recipe);
-        return format("redirect:/recipe/%d/details", savedRecipe.getId());
+        return format("redirect:/recipe/%s/details", savedRecipe.getId());
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable String id) {
         recipeService.deleteById(id);
         return "redirect:/index";
     }

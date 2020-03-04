@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class RecipeControllerMockMvcTest {
 
-    private static final Long RECIPE_ID = 1L;
+    private static final String RECIPE_ID = "1";
 
     @Mock
     private RecipeService recipeService;
@@ -110,12 +110,5 @@ public class RecipeControllerMockMvcTest {
         mockMvc.perform(get("/recipe/1/details"))
                 .andExpect(status().isNotFound())
                 .andExpect(view().name("error-404"));
-    }
-
-    @Test
-    public void shouldHandleNumberFormatException() throws Exception {
-        mockMvc.perform(get("/recipe/test/details"))
-                .andExpect(status().isBadRequest())
-                .andExpect(view().name("error-400"));
     }
 }

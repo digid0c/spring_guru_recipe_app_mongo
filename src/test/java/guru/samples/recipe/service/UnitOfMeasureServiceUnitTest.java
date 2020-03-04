@@ -21,8 +21,8 @@ import static org.mockito.Mockito.when;
 
 public class UnitOfMeasureServiceUnitTest {
 
-    private static final Long FIRST_UNIT_OF_MEASURE_ID = 1L;
-    private static final Long SECOND_UNIT_OF_MEASURE_ID = 2L;
+    private static final String FIRST_UNIT_OF_MEASURE_ID = "1";
+    private static final String SECOND_UNIT_OF_MEASURE_ID = "2";
 
     @Mock
     private UnitOfMeasureRepository unitOfMeasureRepository;

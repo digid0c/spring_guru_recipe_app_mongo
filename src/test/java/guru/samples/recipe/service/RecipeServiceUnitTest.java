@@ -24,7 +24,7 @@ import static org.mockito.Mockito.*;
 
 public class RecipeServiceUnitTest {
 
-    private static final Long RECIPE_ID = 1L;
+    private static final String RECIPE_ID = "1";
 
     private RecipeService tested;
 

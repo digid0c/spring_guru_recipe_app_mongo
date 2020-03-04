@@ -39,7 +39,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public IngredientView findByIngredientIdAndRecipeId(final Long ingredientId, final Long recipeId) {
+    public IngredientView findByIngredientIdAndRecipeId(final String ingredientId, final String recipeId) {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RuntimeException("Requested recipe is not found!"));
 
@@ -76,7 +76,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public void deleteById(Long ingredientId, Long recipeId) {
+    public void deleteById(String ingredientId, String recipeId) {
         Optional.of(recipeRepository.findById(recipeId))
                 .orElseThrow(() -> new RuntimeException("Cannot delete ingredient, which does not belong to any recipe!"));
 

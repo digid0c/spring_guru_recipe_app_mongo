@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class ImageControllerMockMvcTest {
 
-    private static final Long RECIPE_ID = 1L;
+    private static final String RECIPE_ID = "1";
     private static final String CONTENT = "test";
 
     @Mock
@@ -89,13 +89,6 @@ public class ImageControllerMockMvcTest {
         verify(recipeService).findViewById(RECIPE_ID);
         byte[] responseBytes = response.getContentAsByteArray();
         assertThat(responseBytes.length, is(equalTo(CONTENT.getBytes().length)));
-    }
-
-    @Test
-    public void shouldHandleNumberFormatException() throws Exception {
-        mockMvc.perform(get("/recipe/test/recipe-image"))
-                .andExpect(status().isBadRequest())
-                .andExpect(view().name("error-400"));
     }
 
     private Byte[] createImageBytes() {

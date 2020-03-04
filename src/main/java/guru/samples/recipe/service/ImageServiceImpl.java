@@ -21,7 +21,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void save(Long recipeId, MultipartFile image) {
+    public void save(String recipeId, MultipartFile image) {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new RuntimeException("Image must relate to some recipe!"));
         Byte[] imageBytes = null;

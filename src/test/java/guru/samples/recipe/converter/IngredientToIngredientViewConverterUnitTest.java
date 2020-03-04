@@ -8,14 +8,15 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
+import static java.math.BigDecimal.ONE;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class IngredientToIngredientViewConverterUnitTest {
 
-    private static final Long ID = 1L;
-    private static final Long UNIT_OF_MEASURE_ID = 2L;
-    private static final BigDecimal AMOUNT = BigDecimal.ONE;
+    private static final String ID = "1";
+    private static final String UNIT_OF_MEASURE_ID = "2";
+    private static final BigDecimal AMOUNT = ONE;
     private static final String DESCRIPTION = "Some description";
 
     private IngredientToIngredientViewConverter tested;

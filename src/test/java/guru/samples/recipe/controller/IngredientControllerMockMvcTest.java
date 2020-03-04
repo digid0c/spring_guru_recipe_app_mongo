@@ -27,8 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class IngredientControllerMockMvcTest {
 
-    private static final Long RECIPE_ID = 1L;
-    private static final Long INGREDIENT_ID = 1L;
+    private static final String RECIPE_ID = "1";
+    private static final String INGREDIENT_ID = "1";
 
     @Mock
     private RecipeService recipeService;

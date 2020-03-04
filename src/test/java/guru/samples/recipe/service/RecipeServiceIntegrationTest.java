@@ -4,6 +4,7 @@ import guru.samples.recipe.converter.RecipeToRecipeViewConverter;
 import guru.samples.recipe.domain.Recipe;
 import guru.samples.recipe.repository.RecipeRepository;
 import guru.samples.recipe.view.RecipeView;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@Disabled("Temporarily disable integration tests until migration to MongoDB")
 public class RecipeServiceIntegrationTest {
 
     private static final String NEW_DESCRIPTION = "Some new description";
