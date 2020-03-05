@@ -11,8 +11,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -46,9 +46,9 @@ public class RecipeView {
     @NotBlank
     private String directions;
 
-    private Set<IngredientView> ingredients = new HashSet<>();
+    private List<IngredientView> ingredients = new ArrayList<>();
     private Byte[] image;
     private Difficulty difficulty;
     private NotesView notes;
-    private Set<CategoryView> categories = new HashSet<>();
+    private List<CategoryView> categories = new ArrayList<>();
 }

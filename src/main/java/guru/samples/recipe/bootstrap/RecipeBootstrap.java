@@ -45,9 +45,10 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
             log.debug("Loading units of measure...");
             loadUnitsOfMeasure();
         }
-
-        log.debug("Loading Recipes...");
-        recipeRepository.saveAll(getRecipes());
+        if (recipeRepository.count() == 0) {
+            log.debug("Loading Recipes...");
+            recipeRepository.saveAll(getRecipes());
+        }
     }
 
     private void loadCategories() {

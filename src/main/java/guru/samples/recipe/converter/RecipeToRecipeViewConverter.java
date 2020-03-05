@@ -9,7 +9,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class RecipeToRecipeViewConverter implements Converter<Recipe, RecipeView> {
@@ -46,10 +46,10 @@ public class RecipeToRecipeViewConverter implements Converter<Recipe, RecipeView
                         .notes(notesToNotesViewConverter.convert(source.getNotes()))
                         .categories(source.getCategories().stream()
                                 .map(categoryToCategoryViewConverter::convert)
-                                .collect(toSet()))
+                                .collect(toList()))
                         .ingredients(source.getIngredients().stream()
                                 .map(ingredientToIngredientViewConverter::convert)
-                                .collect(toSet()))
+                                .collect(toList()))
                         .build())
                 .orElse(null);
     }

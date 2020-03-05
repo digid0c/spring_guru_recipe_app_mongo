@@ -3,18 +3,18 @@ package guru.samples.recipe.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.math.BigDecimal;
+
+import static java.util.UUID.randomUUID;
 
 @Data
 @Builder
 @AllArgsConstructor
 public class Ingredient {
 
-    @Id
-    private String id;
+    private String id = randomUUID().toString();
     private String description;
     private BigDecimal amount;
     @DBRef

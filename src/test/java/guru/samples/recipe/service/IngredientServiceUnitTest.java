@@ -6,7 +6,6 @@ import guru.samples.recipe.converter.UnitOfMeasureToUnitOfMeasureViewConverter;
 import guru.samples.recipe.converter.UnitOfMeasureViewToUnitOfMeasureConverter;
 import guru.samples.recipe.domain.Ingredient;
 import guru.samples.recipe.domain.Recipe;
-import guru.samples.recipe.repository.IngredientRepository;
 import guru.samples.recipe.repository.RecipeRepository;
 import guru.samples.recipe.repository.UnitOfMeasureRepository;
 import guru.samples.recipe.view.IngredientView;
@@ -38,15 +37,12 @@ public class IngredientServiceUnitTest {
     @Mock
     private UnitOfMeasureRepository unitOfMeasureRepository;
 
-    @Mock
-    private IngredientRepository ingredientRepository;
-
     private IngredientService tested;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        tested = new IngredientServiceImpl(recipeRepository, unitOfMeasureRepository, ingredientRepository,
+        tested = new IngredientServiceImpl(recipeRepository, unitOfMeasureRepository,
                 new IngredientToIngredientViewConverter(new UnitOfMeasureToUnitOfMeasureViewConverter()),
                 new IngredientViewToIngredientConverter(new UnitOfMeasureViewToUnitOfMeasureConverter()));
     }
@@ -71,13 +67,13 @@ public class IngredientServiceUnitTest {
                 .build();
         Recipe recipe = createRecipe();
         when(recipeRepository.findById(RECIPE_ID)).thenReturn(Optional.of(recipe));
-        when(ingredientRepository.save(any())).then(returnsFirstArg());
+        when(recipeRepository.save(any())).then(returnsFirstArg());
 
         IngredientView savedIngredient = tested.save(ingredient);
 
         assertThat(savedIngredient.getId(), is(equalTo(THIRD_INGREDIENT_ID)));
         verify(recipeRepository).findById(RECIPE_ID);
-        verify(ingredientRepository).save(any());
+        verify(recipeRepository).save(any());
     }
 
     @Test
@@ -88,7 +84,6 @@ public class IngredientServiceUnitTest {
         tested.deleteById(SECOND_INGREDIENT_ID, RECIPE_ID);
 
         verify(recipeRepository).findById(RECIPE_ID);
-        verify(ingredientRepository).deleteById(SECOND_INGREDIENT_ID);
     }
 
     private Recipe createRecipe() {

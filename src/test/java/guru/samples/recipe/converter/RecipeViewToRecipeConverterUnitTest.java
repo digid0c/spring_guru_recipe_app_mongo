@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.stream.Stream;
 
 import static guru.samples.recipe.domain.Difficulty.EASY;
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -81,7 +81,7 @@ public class RecipeViewToRecipeConverterUnitTest {
                         CategoryView.builder()
                                 .id(SECOND_CATEGORY_ID)
                                 .build())
-                        .collect(toSet()))
+                        .collect(toList()))
                 .ingredients(Stream.of(
                         IngredientView.builder()
                                 .id(FIRST_INGREDIENT_ID)
@@ -89,7 +89,7 @@ public class RecipeViewToRecipeConverterUnitTest {
                         IngredientView.builder()
                                 .id(SECOND_INGREDIENT_ID)
                                 .build())
-                        .collect(toSet()))
+                        .collect(toList()))
                 .notes(NotesView.builder()
                         .id(NOTES_ID)
                         .build())
