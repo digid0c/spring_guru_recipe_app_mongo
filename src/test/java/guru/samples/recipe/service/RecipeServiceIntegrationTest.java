@@ -4,20 +4,17 @@ import guru.samples.recipe.converter.RecipeToRecipeViewConverter;
 import guru.samples.recipe.domain.Recipe;
 import guru.samples.recipe.repository.RecipeRepository;
 import guru.samples.recipe.view.RecipeView;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@Disabled("Temporarily disable integration tests until migration to MongoDB")
 public class RecipeServiceIntegrationTest {
 
     private static final String NEW_DESCRIPTION = "Some new description";
@@ -32,7 +29,6 @@ public class RecipeServiceIntegrationTest {
     private RecipeToRecipeViewConverter recipeToRecipeViewConverter;
 
     @Test
-    @Transactional
     public void shouldUpdateRecipeDescription() {
         Recipe testRecipe = recipeRepository.findAll().iterator().next();
         RecipeView testRecipeView = recipeToRecipeViewConverter.convert(testRecipe);
