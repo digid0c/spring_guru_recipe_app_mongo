@@ -1,10 +1,9 @@
 package guru.samples.recipe.service;
 
 import guru.samples.recipe.view.UnitOfMeasureView;
-
-import java.util.Set;
+import reactor.core.publisher.Flux;
 
 public interface UnitOfMeasureService {
 
-    Set<UnitOfMeasureView> findAll();
+    Flux<UnitOfMeasureView> findAll();
 }

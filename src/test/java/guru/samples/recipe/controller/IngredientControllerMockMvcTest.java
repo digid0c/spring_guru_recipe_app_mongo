@@ -14,8 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.HashSet;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,6 +21,7 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static reactor.core.publisher.Flux.empty;
 
 @ExtendWith(MockitoExtension.class)
 public class IngredientControllerMockMvcTest {
@@ -86,7 +85,7 @@ public class IngredientControllerMockMvcTest {
                 .id(INGREDIENT_ID)
                 .build();
         when(ingredientService.findByIngredientIdAndRecipeId(INGREDIENT_ID, RECIPE_ID)).thenReturn(ingredient);
-        when(unitOfMeasureService.findAll()).thenReturn(new HashSet<>());
+        when(unitOfMeasureService.findAll()).thenReturn(empty());
 
         mockMvc.perform(get("/recipe/1/ingredient/1/update"))
                 .andExpect(status().isOk())
@@ -122,7 +121,7 @@ public class IngredientControllerMockMvcTest {
                 .id(RECIPE_ID)
                 .build();
         when(recipeService.findViewById(RECIPE_ID)).thenReturn(recipe);
-        when(unitOfMeasureService.findAll()).thenReturn(new HashSet<>());
+        when(unitOfMeasureService.findAll()).thenReturn(empty());
 
         mockMvc.perform(get("/recipe/1/ingredient/new"))
                 .andExpect(status().isOk())
