@@ -1,12 +1,13 @@
 package guru.samples.recipe.service;
 
 import guru.samples.recipe.view.IngredientView;
+import reactor.core.publisher.Mono;
 
 public interface IngredientService {
 
-    IngredientView findByIngredientIdAndRecipeId(String ingredientId, String recipeId);
+    Mono<IngredientView> findByIngredientIdAndRecipeId(String ingredientId, String recipeId);
 
-    IngredientView save(IngredientView ingredientView);
+    Mono<IngredientView> save(IngredientView ingredientView);
 
-    void deleteById(String ingredientId, String recipeId);
+    Mono<Void> deleteById(String ingredientId, String recipeId);
 }

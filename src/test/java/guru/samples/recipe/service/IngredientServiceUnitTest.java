@@ -6,8 +6,8 @@ import guru.samples.recipe.converter.UnitOfMeasureToUnitOfMeasureViewConverter;
 import guru.samples.recipe.converter.UnitOfMeasureViewToUnitOfMeasureConverter;
 import guru.samples.recipe.domain.Ingredient;
 import guru.samples.recipe.domain.Recipe;
-import guru.samples.recipe.repository.RecipeRepository;
-import guru.samples.recipe.repository.UnitOfMeasureRepository;
+import guru.samples.recipe.repository.reactive.RecipeReactiveRepository;
+import guru.samples.recipe.repository.reactive.UnitOfMeasureReactiveRepository;
 import guru.samples.recipe.view.IngredientView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,14 +15,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.HashSet;
-import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static reactor.core.publisher.Mono.just;
 
 public class IngredientServiceUnitTest {
 
@@ -32,10 +31,10 @@ public class IngredientServiceUnitTest {
     private static final String THIRD_INGREDIENT_ID = "3";
 
     @Mock
-    private RecipeRepository recipeRepository;
+    private RecipeReactiveRepository recipeRepository;
 
     @Mock
-    private UnitOfMeasureRepository unitOfMeasureRepository;
+    private UnitOfMeasureReactiveRepository unitOfMeasureRepository;
 
     private IngredientService tested;
 
@@ -50,9 +49,9 @@ public class IngredientServiceUnitTest {
     @Test
     public void shouldFindIngredientByIdAndRecipeId() {
         Recipe recipe = createRecipe();
-        when(recipeRepository.findById(RECIPE_ID)).thenReturn(Optional.of(recipe));
+        when(recipeRepository.findById(RECIPE_ID)).thenReturn(just(recipe));
 
-        IngredientView ingredient = tested.findByIngredientIdAndRecipeId(SECOND_INGREDIENT_ID, RECIPE_ID);
+        IngredientView ingredient = tested.findByIngredientIdAndRecipeId(SECOND_INGREDIENT_ID, RECIPE_ID).block();
 
         verify(recipeRepository).findById(RECIPE_ID);
         assertThat(ingredient, is(notNullValue()));
@@ -66,11 +65,12 @@ public class IngredientServiceUnitTest {
                 .recipeId(RECIPE_ID)
                 .build();
         Recipe recipe = createRecipe();
-        when(recipeRepository.findById(RECIPE_ID)).thenReturn(Optional.of(recipe));
-        when(recipeRepository.save(any())).then(returnsFirstArg());
+        when(recipeRepository.findById(RECIPE_ID)).thenReturn(just(recipe));
+        when(recipeRepository.save(any())).thenReturn(just(recipe));
 
-        IngredientView savedIngredient = tested.save(ingredient);
+        IngredientView savedIngredient = tested.save(ingredient).block();
 
+        assertThat(savedIngredient, is(notNullValue()));
         assertThat(savedIngredient.getId(), is(equalTo(THIRD_INGREDIENT_ID)));
         verify(recipeRepository).findById(RECIPE_ID);
         verify(recipeRepository).save(any());
@@ -79,7 +79,7 @@ public class IngredientServiceUnitTest {
     @Test
     public void shouldDeleteIngredient() {
         Recipe recipe = createRecipe();
-        when(recipeRepository.findById(RECIPE_ID)).thenReturn(Optional.of(recipe));
+        when(recipeRepository.findById(RECIPE_ID)).thenReturn(just(recipe));
 
         tested.deleteById(SECOND_INGREDIENT_ID, RECIPE_ID);
 

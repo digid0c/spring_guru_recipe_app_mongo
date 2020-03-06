@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import reactor.core.publisher.Mono;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static reactor.core.publisher.Flux.empty;
+import static reactor.core.publisher.Mono.just;
 
 @ExtendWith(MockitoExtension.class)
 public class IngredientControllerMockMvcTest {
@@ -69,7 +71,7 @@ public class IngredientControllerMockMvcTest {
                 .id(INGREDIENT_ID)
                 .recipeId(RECIPE_ID)
                 .build();
-        when(ingredientService.findByIngredientIdAndRecipeId(INGREDIENT_ID, RECIPE_ID)).thenReturn(ingredient);
+        when(ingredientService.findByIngredientIdAndRecipeId(INGREDIENT_ID, RECIPE_ID)).thenReturn(just(ingredient));
 
         mockMvc.perform(get("/recipe/1/ingredient/1/details"))
                 .andExpect(status().isOk())
@@ -84,7 +86,7 @@ public class IngredientControllerMockMvcTest {
         IngredientView ingredient = IngredientView.builder()
                 .id(INGREDIENT_ID)
                 .build();
-        when(ingredientService.findByIngredientIdAndRecipeId(INGREDIENT_ID, RECIPE_ID)).thenReturn(ingredient);
+        when(ingredientService.findByIngredientIdAndRecipeId(INGREDIENT_ID, RECIPE_ID)).thenReturn(just(ingredient));
         when(unitOfMeasureService.findAll()).thenReturn(empty());
 
         mockMvc.perform(get("/recipe/1/ingredient/1/update"))
@@ -103,7 +105,7 @@ public class IngredientControllerMockMvcTest {
                 .id(INGREDIENT_ID)
                 .recipeId(RECIPE_ID)
                 .build();
-        when(ingredientService.save(any())).thenReturn(ingredient);
+        when(ingredientService.save(any())).thenReturn(just(ingredient));
 
         mockMvc.perform(post("/recipe/1/ingredient")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -135,6 +137,8 @@ public class IngredientControllerMockMvcTest {
 
     @Test
     public void shouldDeleteRecipeIngredient() throws Exception {
+        when(ingredientService.deleteById(RECIPE_ID, INGREDIENT_ID)).thenReturn(Mono.empty());
+
         mockMvc.perform(get("/recipe/1/ingredient/1/delete"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/1/ingredients"));
