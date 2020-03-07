@@ -3,28 +3,25 @@ package guru.samples.recipe.service;
 import guru.samples.recipe.converter.RecipeToRecipeViewConverter;
 import guru.samples.recipe.converter.RecipeViewToRecipeConverter;
 import guru.samples.recipe.domain.Recipe;
-import guru.samples.recipe.exception.NotFoundException;
-import guru.samples.recipe.repository.RecipeRepository;
+import guru.samples.recipe.repository.reactive.RecipeReactiveRepository;
 import guru.samples.recipe.view.RecipeView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Flux;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.List;
 
-import static java.util.Optional.empty;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
+import static reactor.core.publisher.Mono.just;
 
 public class RecipeServiceUnitTest {
 
     private static final String RECIPE_ID = "1";
+    private static final int RECIPES_SIZE = 3;
 
     private RecipeService tested;
 
@@ -35,7 +32,7 @@ public class RecipeServiceUnitTest {
     private RecipeViewToRecipeConverter recipeViewToRecipeConverter;
 
     @Mock
-    private RecipeRepository recipeRepository;
+    private RecipeReactiveRepository recipeRepository;
 
     @BeforeEach
     public void setUp() {
@@ -45,19 +42,19 @@ public class RecipeServiceUnitTest {
 
     @Test
     public void shouldGetAllRecipes() {
-        Set<Recipe> recipes = Stream.of(new Recipe(), new Recipe(), new Recipe()).collect(Collectors.toSet());
-        when(recipeRepository.findAll()).thenReturn(recipes);
+        when(recipeRepository.findAll()).thenReturn(Flux.just(new Recipe(), new Recipe(), new Recipe()));
 
-        Set<Recipe> allRecipes = tested.findAll();
+        List<Recipe> allRecipes = tested.findAll().collectList().block();
         verify(recipeRepository, times(1)).findAll();
-        assertThat(allRecipes.size(), is(equalTo(recipes.size())));
+        assertThat(allRecipes, is(notNullValue()));
+        assertThat(allRecipes.size(), is(equalTo(RECIPES_SIZE)));
     }
 
     @Test
     public void shouldGetRecipeById() {
-        when(recipeRepository.findById(RECIPE_ID)).thenReturn(Optional.of(new Recipe()));
+        when(recipeRepository.findById(RECIPE_ID)).thenReturn(just(new Recipe()));
 
-        Recipe recipe = tested.findById(RECIPE_ID);
+        Recipe recipe = tested.findById(RECIPE_ID).block();
 
         assertThat(recipe, is(notNullValue()));
         verify(recipeRepository).findById(RECIPE_ID);
@@ -67,12 +64,12 @@ public class RecipeServiceUnitTest {
     @Test
     public void shouldGetRecipeViewById() {
         Recipe recipe = Recipe.builder().id(RECIPE_ID).build();
-        when(recipeRepository.findById(RECIPE_ID)).thenReturn(Optional.of(recipe));
+        when(recipeRepository.findById(RECIPE_ID)).thenReturn(just(recipe));
 
         RecipeView recipeView = RecipeView.builder().id(RECIPE_ID).build();
         when(recipeToRecipeViewConverter.convert(recipe)).thenReturn(recipeView);
 
-        RecipeView foundRecipe = tested.findViewById(RECIPE_ID);
+        RecipeView foundRecipe = tested.findViewById(RECIPE_ID).block();
         assertThat(foundRecipe, is(notNullValue()));
         verify(recipeRepository).findById(RECIPE_ID);
         verify(recipeRepository, never()).findAll();
@@ -83,12 +80,5 @@ public class RecipeServiceUnitTest {
         tested.deleteById(RECIPE_ID);
 
         verify(recipeRepository).deleteById(RECIPE_ID);
-    }
-
-    @Test
-    public void shouldNotFindRecipe() {
-        when(recipeRepository.findById(RECIPE_ID)).thenReturn(empty());
-
-        assertThrows(NotFoundException.class, () -> tested.findById(RECIPE_ID), "Requested recipe is not found!");
     }
 }

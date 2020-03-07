@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,6 +26,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static reactor.core.publisher.Flux.empty;
+import static reactor.core.publisher.Flux.fromIterable;
 
 public class IndexControllerUnitTest {
 
@@ -43,7 +46,7 @@ public class IndexControllerUnitTest {
     private UnitOfMeasureRepository unitOfMeasureRepository;
 
     @Captor
-    private ArgumentCaptor<Set<Recipe>> argumentCaptor;
+    private ArgumentCaptor<List<Recipe>> argumentCaptor;
 
     @BeforeEach
     public void setUp() {
@@ -54,7 +57,7 @@ public class IndexControllerUnitTest {
     @Test
     public void shouldGetIndexPageView() {
         Set<Recipe> recipes = Stream.of(new Recipe(), new Recipe(), new Recipe()).collect(Collectors.toSet());
-        when(recipeService.findAll()).thenReturn(recipes);
+        when(recipeService.findAll()).thenReturn(fromIterable(recipes));
 
         String viewName = tested.index(model);
 
@@ -67,6 +70,7 @@ public class IndexControllerUnitTest {
     @Test
     public void testMockMVC() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(tested).build();
+        when(recipeService.findAll()).thenReturn(empty());
 
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())

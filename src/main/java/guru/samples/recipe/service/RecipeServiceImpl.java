@@ -3,31 +3,24 @@ package guru.samples.recipe.service;
 import guru.samples.recipe.converter.RecipeToRecipeViewConverter;
 import guru.samples.recipe.converter.RecipeViewToRecipeConverter;
 import guru.samples.recipe.domain.Recipe;
-import guru.samples.recipe.exception.NotFoundException;
-import guru.samples.recipe.repository.RecipeRepository;
+import guru.samples.recipe.repository.reactive.RecipeReactiveRepository;
 import guru.samples.recipe.view.RecipeView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
-import static java.lang.String.format;
-import static java.util.Optional.ofNullable;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
-    private final RecipeRepository recipeRepository;
+    private final RecipeReactiveRepository recipeRepository;
     private final RecipeToRecipeViewConverter recipeToRecipeViewConverter;
     private final RecipeViewToRecipeConverter recipeViewToRecipeConverter;
 
     @Autowired
-    public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeToRecipeViewConverter recipeToRecipeViewConverter,
+    public RecipeServiceImpl(RecipeReactiveRepository recipeRepository, RecipeToRecipeViewConverter recipeToRecipeViewConverter,
                              RecipeViewToRecipeConverter recipeViewToRecipeConverter) {
         this.recipeRepository = recipeRepository;
         this.recipeToRecipeViewConverter = recipeToRecipeViewConverter;
@@ -35,36 +28,29 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Set<Recipe> findAll() {
+    public Flux<Recipe> findAll() {
         log.info("Calling service to obtain recipes");
-        return StreamSupport.stream(recipeRepository.findAll().spliterator(), false)
-                .collect(Collectors.toSet());
+        return recipeRepository.findAll();
     }
 
     @Override
-    public Recipe findById(String id) {
-        return recipeRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(format("Requested recipe id=%s is not found!", id)));
+    public Mono<Recipe> findById(String id) {
+        return recipeRepository.findById(id);
     }
 
     @Override
-    @Transactional
-    public RecipeView findViewById(String id) {
-        return recipeToRecipeViewConverter.convert(findById(id));
+    public Mono<RecipeView> findViewById(String id) {
+        return findById(id).map(recipeToRecipeViewConverter::convert);
     }
 
     @Override
-    @Transactional
-    public RecipeView save(RecipeView recipe) {
-        Recipe detachedRecipe = recipeViewToRecipeConverter.convert(recipe);
-        Recipe savedRecipe = ofNullable(detachedRecipe)
-                .map(recipeRepository::save)
-                .orElse(null);
-        return recipeToRecipeViewConverter.convert(savedRecipe);
+    public Mono<RecipeView> save(RecipeView recipe) {
+        return recipeRepository.save(recipeViewToRecipeConverter.convert(recipe))
+                .map(recipeToRecipeViewConverter::convert);
     }
 
     @Override
-    public void deleteById(String id) {
-        recipeRepository.deleteById(id);
+    public Mono<Void> deleteById(String id) {
+        return recipeRepository.deleteById(id);
     }
 }

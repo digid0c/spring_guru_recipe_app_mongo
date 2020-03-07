@@ -34,7 +34,7 @@ public class RecipeServiceIntegrationTest {
         RecipeView testRecipeView = recipeToRecipeViewConverter.convert(testRecipe);
 
         testRecipeView.setDescription(NEW_DESCRIPTION);
-        RecipeView savedRecipe = tested.save(testRecipeView);
+        RecipeView savedRecipe = tested.save(testRecipeView).block();
 
         assertThat(savedRecipe, is(notNullValue()));
         assertThat(savedRecipe.getId(), is(equalTo(testRecipe.getId())));

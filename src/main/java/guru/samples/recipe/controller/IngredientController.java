@@ -32,7 +32,7 @@ public class IngredientController {
 
     @GetMapping("/recipe/{recipeId}/ingredients")
     public String list(@PathVariable String recipeId, Model model) {
-        model.addAttribute("recipe", recipeService.findViewById(recipeId));
+        model.addAttribute("recipe", recipeService.findViewById(recipeId).block());
         return "recipe/ingredient/list";
     }
 
@@ -57,7 +57,7 @@ public class IngredientController {
 
     @GetMapping("/recipe/{recipeId}/ingredient/new")
     public String createRecipeIngredient(@PathVariable String recipeId, Model model) {
-        RecipeView recipe = recipeService.findViewById(recipeId);
+        RecipeView recipe = recipeService.findViewById(recipeId).block();
         IngredientView ingredient = IngredientView.builder()
                 .recipeId(recipe.getId())
                 .unitOfMeasure(new UnitOfMeasureView())

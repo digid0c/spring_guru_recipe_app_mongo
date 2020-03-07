@@ -20,6 +20,8 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static reactor.core.publisher.Mono.empty;
+import static reactor.core.publisher.Mono.just;
 
 @ExtendWith(MockitoExtension.class)
 public class RecipeControllerMockMvcTest {
@@ -43,7 +45,7 @@ public class RecipeControllerMockMvcTest {
 
     @Test
     public void shouldGetRecipeById() throws Exception {
-        when(recipeService.findById(RECIPE_ID)).thenReturn(new Recipe());
+        when(recipeService.findById(RECIPE_ID)).thenReturn(just(new Recipe()));
 
         mockMvc.perform(get("/recipe/1/details"))
                 .andExpect(status().isOk())
@@ -62,7 +64,7 @@ public class RecipeControllerMockMvcTest {
     @Test
     public void shouldPostNewRecipeForm() throws Exception {
         RecipeView recipe = RecipeView.builder().id(RECIPE_ID).build();
-        when(recipeService.save(any(RecipeView.class))).thenReturn(recipe);
+        when(recipeService.save(any(RecipeView.class))).thenReturn(just(recipe));
 
         mockMvc.perform(post("/recipe/save")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -86,7 +88,7 @@ public class RecipeControllerMockMvcTest {
     @Test
     public void shouldGetUpdateRecipeForm() throws Exception {
         RecipeView recipe = RecipeView.builder().id(RECIPE_ID).build();
-        when(recipeService.findViewById(RECIPE_ID)).thenReturn(recipe);
+        when(recipeService.findViewById(RECIPE_ID)).thenReturn(just(recipe));
 
         mockMvc.perform(get("/recipe/1/update"))
                 .andExpect(status().isOk())
@@ -96,6 +98,8 @@ public class RecipeControllerMockMvcTest {
 
     @Test
     public void shouldDeleteRecipe() throws Exception {
+        when(recipeService.deleteById(RECIPE_ID)).thenReturn(empty());
+
         mockMvc.perform(get("/recipe/1/delete"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/index"));

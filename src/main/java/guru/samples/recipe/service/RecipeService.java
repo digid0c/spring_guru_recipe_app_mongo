@@ -2,18 +2,18 @@ package guru.samples.recipe.service;
 
 import guru.samples.recipe.domain.Recipe;
 import guru.samples.recipe.view.RecipeView;
-
-import java.util.Set;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface RecipeService {
 
-    Set<Recipe> findAll();
+    Flux<Recipe> findAll();
 
-    Recipe findById(String id);
+    Mono<Recipe> findById(String id);
 
-    RecipeView findViewById(String id);
+    Mono<RecipeView> findViewById(String id);
 
-    RecipeView save(RecipeView recipe);
+    Mono<RecipeView> save(RecipeView recipe);
 
-    void deleteById(String id);
+    Mono<Void> deleteById(String id);
 }

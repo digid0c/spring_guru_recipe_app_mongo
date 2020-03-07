@@ -55,7 +55,7 @@ public class IngredientControllerMockMvcTest {
         RecipeView recipe = RecipeView.builder()
                 .id(RECIPE_ID)
                 .build();
-        when(recipeService.findViewById(RECIPE_ID)).thenReturn(recipe);
+        when(recipeService.findViewById(RECIPE_ID)).thenReturn(just(recipe));
 
         mockMvc.perform(get("/recipe/1/ingredients"))
                 .andExpect(status().isOk())
@@ -122,7 +122,7 @@ public class IngredientControllerMockMvcTest {
         RecipeView recipe = RecipeView.builder()
                 .id(RECIPE_ID)
                 .build();
-        when(recipeService.findViewById(RECIPE_ID)).thenReturn(recipe);
+        when(recipeService.findViewById(RECIPE_ID)).thenReturn(just(recipe));
         when(unitOfMeasureService.findAll()).thenReturn(empty());
 
         mockMvc.perform(get("/recipe/1/ingredient/new"))

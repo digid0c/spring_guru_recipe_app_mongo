@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static reactor.core.publisher.Mono.just;
 
 @ExtendWith(MockitoExtension.class)
 public class ImageControllerMockMvcTest {
@@ -52,7 +53,7 @@ public class ImageControllerMockMvcTest {
         RecipeView recipe = RecipeView.builder()
                 .id(RECIPE_ID)
                 .build();
-        when(recipeService.findViewById(RECIPE_ID)).thenReturn(recipe);
+        when(recipeService.findViewById(RECIPE_ID)).thenReturn(just(recipe));
 
         mockMvc.perform(get("/recipe/1/image"))
                 .andExpect(status().isOk())
@@ -80,7 +81,7 @@ public class ImageControllerMockMvcTest {
                 .id(RECIPE_ID)
                 .image(createImageBytes())
                 .build();
-        when(recipeService.findViewById(RECIPE_ID)).thenReturn(recipe);
+        when(recipeService.findViewById(RECIPE_ID)).thenReturn(just(recipe));
 
         MockHttpServletResponse response = mockMvc.perform(get("/recipe/1/recipe-image"))
                 .andExpect(status().isOk())
