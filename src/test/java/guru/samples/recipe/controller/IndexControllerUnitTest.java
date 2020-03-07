@@ -5,6 +5,7 @@ import guru.samples.recipe.repository.CategoryRepository;
 import guru.samples.recipe.repository.UnitOfMeasureRepository;
 import guru.samples.recipe.service.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -29,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static reactor.core.publisher.Flux.empty;
 import static reactor.core.publisher.Flux.fromIterable;
 
+@Disabled("Migration from spring-webmvc to spring-webflux")
 public class IndexControllerUnitTest {
 
     private IndexController tested;

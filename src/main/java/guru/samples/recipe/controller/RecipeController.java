@@ -1,6 +1,5 @@
 package guru.samples.recipe.controller;
 
-import guru.samples.recipe.exception.NotFoundException;
 import guru.samples.recipe.service.RecipeService;
 import guru.samples.recipe.view.RecipeView;
 import lombok.extern.slf4j.Slf4j;
@@ -9,12 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
 import static java.lang.String.format;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @Controller
@@ -67,13 +64,13 @@ public class RecipeController {
         return "redirect:/index";
     }
 
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(NOT_FOUND)
-    public ModelAndView handleNotFoundException(Exception exception) {
-        log.error(exception.getMessage(), exception);
-
-        ModelAndView modelAndView = new ModelAndView("error-404");
-        modelAndView.addObject("exception", exception);
-        return modelAndView;
-    }
+//    @ExceptionHandler(NotFoundException.class)
+//    @ResponseStatus(NOT_FOUND)
+//    public ModelAndView handleNotFoundException(Exception exception) {
+//        log.error(exception.getMessage(), exception);
+//
+//        ModelAndView modelAndView = new ModelAndView("error-404");
+//        modelAndView.addObject("exception", exception);
+//        return modelAndView;
+//    }
 }
