@@ -22,6 +22,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static reactor.core.publisher.Mono.empty;
 import static reactor.core.publisher.Mono.just;
 
 @ExtendWith(MockitoExtension.class)
@@ -66,6 +67,7 @@ public class ImageControllerMockMvcTest {
     @Test
     public void shouldUploadImage() throws Exception {
         MockMultipartFile image = new MockMultipartFile("image", "test.txt", "text/plain", CONTENT.getBytes());
+        when(imageService.save(RECIPE_ID, image)).thenReturn(empty());
 
         mockMvc.perform(multipart("/recipe/1/image").file(image))
                 .andExpect(status().is3xxRedirection())

@@ -1,11 +1,11 @@
 package guru.samples.recipe.service;
 
-import guru.samples.recipe.domain.Recipe;
-import guru.samples.recipe.repository.RecipeRepository;
+import guru.samples.recipe.repository.reactive.RecipeReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
@@ -13,32 +13,33 @@ import java.io.IOException;
 @Service
 public class ImageServiceImpl implements ImageService {
 
-    private final RecipeRepository recipeRepository;
+    private final RecipeReactiveRepository recipeRepository;
 
     @Autowired
-    public ImageServiceImpl(RecipeRepository recipeRepository) {
+    public ImageServiceImpl(RecipeReactiveRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
     }
 
     @Override
-    public void save(String recipeId, MultipartFile image) {
-        Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(() -> new RuntimeException("Image must relate to some recipe!"));
-        Byte[] imageBytes = null;
+    public Mono<Void> save(String recipeId, MultipartFile image) {
+        return recipeRepository.findById(recipeId)
+                .map(recipe -> {
+                    Byte[] imageBytes;
+                    try {
+                        imageBytes = new Byte[image.getBytes().length];
+                        int i = 0;
 
-        try {
-            imageBytes = new Byte[image.getBytes().length];
-            int i = 0;
+                        for (byte b : image.getBytes()) {
+                            imageBytes[i++] = b;
+                        }
+                    } catch (IOException e) {
+                        log.error(e.getMessage(), e);
+                        throw new RuntimeException(e);
+                    }
 
-            for (byte b : image.getBytes()) {
-                imageBytes[i++] = b;
-            }
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
-
-        recipe.setImage(imageBytes);
-        recipeRepository.save(recipe);
+                    recipe.setImage(imageBytes);
+                    recipeRepository.save(recipe).block();
+                    return recipe;
+                }).then();
     }
 }

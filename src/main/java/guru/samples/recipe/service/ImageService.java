@@ -1,8 +1,9 @@
 package guru.samples.recipe.service;
 
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 public interface ImageService {
 
-    void save(String recipeId, MultipartFile image);
+    Mono<Void> save(String recipeId, MultipartFile image);
 }
