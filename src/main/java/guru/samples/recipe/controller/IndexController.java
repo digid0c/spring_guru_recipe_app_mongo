@@ -36,7 +36,7 @@ public class IndexController {
         category.ifPresent(c -> log.info("Category ID is: " + c.getId()));
         unitOfMeasure.ifPresent(uom -> log.info("Unit of measure ID is: " + uom.getId()));
 
-        model.addAttribute("recipes", recipeService.findAll().collectList().block());
+        model.addAttribute("recipes", recipeService.findAll());
 
         return "index";
     }
