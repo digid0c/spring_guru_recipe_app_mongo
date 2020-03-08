@@ -7,9 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 import static java.lang.String.format;
 
@@ -22,9 +21,16 @@ public class RecipeController {
 
     private final RecipeService recipeService;
 
+    private WebDataBinder webDataBinder;
+
     @Autowired
     public RecipeController(RecipeService recipeService) {
         this.recipeService = recipeService;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder webDataBinder) {
+        this.webDataBinder = webDataBinder;
     }
 
     @GetMapping("/{id}/details")
@@ -46,7 +52,10 @@ public class RecipeController {
     }
 
     @PostMapping("/save")
-    public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeView recipe, BindingResult bindingResult) {
+    public String saveOrUpdate(@ModelAttribute("recipe") RecipeView recipe) {
+        webDataBinder.validate();
+        BindingResult bindingResult = webDataBinder.getBindingResult();
+
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors()
                     .forEach(error -> log.debug(error.toString()));
