@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 import static java.lang.String.format;
 
@@ -38,6 +39,11 @@ public class IngredientController {
         this.webDataBinder = webDataBinder;
     }
 
+    @ModelAttribute("unitsOfMeasure")
+    public Flux<UnitOfMeasureView> populateUnitsOfMeasure() {
+        return unitOfMeasureService.findAll();
+    }
+
     @GetMapping("/recipe/{recipeId}/ingredients")
     public String list(@PathVariable String recipeId, Model model) {
         model.addAttribute("recipe", recipeService.findViewById(recipeId));
@@ -53,20 +59,17 @@ public class IngredientController {
     @GetMapping("/recipe/{recipeId}/ingredient/{ingredientId}/update")
     public String updateRecipeIngredient(@PathVariable String recipeId, @PathVariable String ingredientId, Model model) {
         model.addAttribute("ingredient", ingredientService.findByIngredientIdAndRecipeId(ingredientId, recipeId));
-        model.addAttribute("unitsOfMeasure", unitOfMeasureService.findAll());
         return "recipe/ingredient/ingredient-form";
     }
 
     @PostMapping("/recipe/{recipeId}/ingredient")
-    public String saveOrUpdate(@ModelAttribute("ingredient") IngredientView ingredient, Model model) {
+    public String saveOrUpdate(@ModelAttribute("ingredient") IngredientView ingredient) {
         webDataBinder.validate();
         BindingResult bindingResult = webDataBinder.getBindingResult();
 
         if (bindingResult.hasErrors()) {
             bindingResult.getAllErrors()
                     .forEach(error -> log.debug(error.toString()));
-
-            model.addAttribute("unitsOfMeasure", unitOfMeasureService.findAll());
             return "recipe/ingredient/ingredient-form";
         }
 
@@ -83,7 +86,6 @@ public class IngredientController {
                 .build();
 
         model.addAttribute("ingredient", ingredient);
-        model.addAttribute("unitsOfMeasure", unitOfMeasureService.findAll());
         return "recipe/ingredient/ingredient-form";
     }
 
