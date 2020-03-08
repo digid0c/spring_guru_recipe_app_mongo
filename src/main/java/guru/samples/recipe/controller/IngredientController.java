@@ -6,16 +6,17 @@ import guru.samples.recipe.service.UnitOfMeasureService;
 import guru.samples.recipe.view.IngredientView;
 import guru.samples.recipe.view.RecipeView;
 import guru.samples.recipe.view.UnitOfMeasureView;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import static java.lang.String.format;
 
+@Slf4j
 @Controller
 public class IngredientController {
 
@@ -23,11 +24,18 @@ public class IngredientController {
     private final IngredientService ingredientService;
     private final UnitOfMeasureService unitOfMeasureService;
 
+    private WebDataBinder webDataBinder;
+
     @Autowired
     public IngredientController(RecipeService recipeService, IngredientService ingredientService, UnitOfMeasureService unitOfMeasureService) {
         this.recipeService = recipeService;
         this.ingredientService = ingredientService;
         this.unitOfMeasureService = unitOfMeasureService;
+    }
+
+    @InitBinder("ingredient")
+    public void initBinder(WebDataBinder webDataBinder) {
+        this.webDataBinder = webDataBinder;
     }
 
     @GetMapping("/recipe/{recipeId}/ingredients")
@@ -50,7 +58,18 @@ public class IngredientController {
     }
 
     @PostMapping("/recipe/{recipeId}/ingredient")
-    public String saveOrUpdate(@ModelAttribute IngredientView ingredient) {
+    public String saveOrUpdate(@ModelAttribute("ingredient") IngredientView ingredient, Model model) {
+        webDataBinder.validate();
+        BindingResult bindingResult = webDataBinder.getBindingResult();
+
+        if (bindingResult.hasErrors()) {
+            bindingResult.getAllErrors()
+                    .forEach(error -> log.debug(error.toString()));
+
+            model.addAttribute("unitsOfMeasure", unitOfMeasureService.findAll());
+            return "recipe/ingredient/ingredient-form";
+        }
+
         IngredientView savedIngredient = ingredientService.save(ingredient).block();
         return format("redirect:/recipe/%s/ingredient/%s/details", savedIngredient.getRecipeId(), savedIngredient.getId());
     }
